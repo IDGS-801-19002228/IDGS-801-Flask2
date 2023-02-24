@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<form class="from-horizontal" name="form1" action="" method="post">
+    <div class="contol-group">
+        <label class="control-label" for="txtNum1"> Ingresa un Numero </label>
+        <div>
+            <input type="text" name="txtNum1" class="input-xlarge"
+            placerholder="Numero1" value="">
+        </div>
+
+    </div> 
+
+
+    <div class="control-group">
+        <div class="controls">
+            <button type="submit" class="btn btn-dfault btn-primary">
+            <i class="icon-book icon-white"></i> Calcular
+            </button>        
+        </div>
+
+    </div> 
+
+</form>    
+ 
+{%if n1 > 0%}
+    <h1>{{n1}} cajas generadas</h1>
+    <form class="from-horizontal" name="form2" action="/promedioCajas" method="post">
+
+        {%for i in range(n1)%}
+        <div class="contol-group">
+            <label class="control-label" for="txtNum1"> Numero{{i+1}} </label>
+            <div>
+                <input type="text" name="txtNum{{i+1}}" class="input-xlarge"
+                placeholder="Numero{{i+1}}" value="">
+            </div>
+
+        </div> 
+        {% endfor %}
+
+        <input type="hidden" name="val" value={{n1}}>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn btn-dfault btn-primary">
+                <i class="icon-book icon-white"></i> Calcular
+                </button>        
+            </div>
+    
+        </div> 
+    
+    </form>    
+
+
+
+
+{% endif %}
+
+{% endblock  %}
