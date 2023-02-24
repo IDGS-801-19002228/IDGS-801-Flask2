@@ -1,14 +1,60 @@
 from flask import Flask, render_template
 from flask import request
-
+from flask import make_response
+from flask import flash
+from flask_wtf import CSRFProtect
 
 import forms
 app=Flask(__name__)
-
+app.config['SECRET_KEY']= 'my_secret_key'
+csrf=CSRFProtect()
 
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/cookie",methods=['GET','POST'])
+def cookie():
+    reg_user=forms.LoginForm(request.form)
+    
+    if request.method == 'POST' and reg_user.validate():
+        user=reg_user.username.data
+        pasw=reg_user.password.data
+        datos=user+"@"+pasw
+        response.set_cookie('datos_user',datos)
+        success_message='Bienvenido {}'.format(user)
+        flash(success_message)
+    response=make_response(render_template('cookie.html',form=reg_user))
+        #print(user+'\n'+pasw)
+    #response.set_cookie('nombre_cookie','Fernando')    
+    return response
+
+@app.route("/traductor",methods=['GET','POST'])
+def traductor():
+    reg_traductor = forms.TraductorForm(request.form)
+    espanol=''
+    ingles=''
+    radios=''
+    texto=''
+    '''if(request.method=='POST'):
+        if(reg_traductor.esp.data and reg_traductor.eng.data)=='':
+            file=open('traductor.txt','a')
+            file.write('\n'+espanol+'\n'+ingles)
+            #file.write('\n'+'Nuevo Hola Mundo 2')
+            file.close'''
+    
+    if request.method == 'POST' and reg_traductor.validate():
+        espanol=reg_traductor.esp.data
+        file=open('traductor.txt','a')
+        file.write('\n'+espanol+'\n'+ingles)
+        #file.write('\n'+'Nuevo Hola Mundo 2')
+        file.close
+        
+        ingles=reg_traductor.eng.data
+        radios=reg_traductor.radios.data
+        texto=reg_traductor.textoIngresado.data
+        print(espanol)
+    return render_template('traductor.html',form=reg_traductor,espanol=espanol,ingles=ingles,radios=radios,texto=texto)
 
 @app.route("/Alumnos",methods=['GET','POST'])
 def alumnos():
@@ -18,7 +64,7 @@ def alumnos():
     app=''
     apm=''
     correo=''
-    if request.method == 'POST':
+    if request.method == 'POST' and reg_alum.validate():
         mat=reg_alum.matricula.data
         nom=reg_alum.nombre.data
         app=reg_alum.apaterno.data
@@ -83,4 +129,5 @@ def promedioCajas():
 
 
 if __name__=="__main__":
+    #csrf.init_app(app)
     app.run(debug=True,port=3000)

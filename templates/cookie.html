@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+
+{%block content%}
+<div class="col-xs-6">
+    {% from "_macros.html" import render_field %}
+    <form action="" method="post"novalidate>
+        {{ form.csrf_token }}
+        <input type="hidden" name="csrf_token" value="{{form.csrf_token}}">
+    <div class="row_control-group">    
+        {{render_field(form.username)}}
+        {{render_field(form.password)}}
+        <input type="submit" value="Ingresar">
+    </div>
+    </form>
+</div>
+<div class="col-xd-6">
+
+</div>
+    
+{% endblock %}
