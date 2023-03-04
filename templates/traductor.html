@@ -8,24 +8,25 @@
     <div class="row_control-group">    
         {{render_field(form.esp)}}
         {{render_field(form.eng)}}
-        <input type="submit" value="Guardar">
+        <input type="submit" name="Guardar" value="Guardar">
     </div>
     </form>
-    <div class="col-xs-6">
-        <h2>{{espanol}}</h2>
-    </div>
 </div>
 <div class="col-xs-6">
     <h2>-------------------------------------------------</h2>
 </div>
-<div class="col-xd-6">
+<div class="col-xs-6">
+    {% from "_macros.html" import render_field %}
     <form action="" method="post"novalidate>
     <div class="row_control-group">
-        {{render_field(form.radios)}}
-        {{render_field(form.textoIngresado)}}
-        <input type="submit" value="Buscar">
+        {% for subfield in form2.radios %}
+            {{ subfield ()}} {{subfield.label}}<br>
+        {% endfor %}
+        {{render_field(form2.textoIngresado)}}
+        <input type="submit" name="Buscar" value="Buscar">
     </div>
     </form>
-</div>
-    
+    <h2>{{mensaje}}</h2>
+
 {% endblock %}
+
