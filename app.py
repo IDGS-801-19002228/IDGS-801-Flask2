@@ -67,7 +67,7 @@ def traductor():
                             mensaje = f'La traduccion de "{español.upper}" es "{ingles.upper}".'
                             break
                 if not mensaje:
-                    mensaje="No existe esta palabra"
+                    mensaje="La palabra ingresada no existe"
                     file.close()
                 return render_template("traductor.html",form=reg_traductor,form2=reg_buscar,mensaje=mensaje)
     return render_template('traductor.html',form=reg_traductor,form2=reg_buscar)
