@@ -3,6 +3,7 @@ from flask import request
 from flask import make_response
 from flask import flash
 from flask_wtf import CSRFProtect
+from io import open
 
 import forms
 app=Flask(__name__)
@@ -32,29 +33,44 @@ def cookie():
 @app.route("/traductor",methods=['GET','POST'])
 def traductor():
     reg_traductor = forms.TraductorForm(request.form)
-    espanol=''
-    ingles=''
-    radios=''
-    texto=''
-    '''if(request.method=='POST'):
-        if(reg_traductor.esp.data and reg_traductor.eng.data)=='':
-            file=open('traductor.txt','a')
-            file.write('\n'+espanol+'\n'+ingles)
-            #file.write('\n'+'Nuevo Hola Mundo 2')
-            file.close'''
-    
-    if request.method == 'POST' and reg_traductor.validate():
-        espanol=reg_traductor.esp.data
-        file=open('traductor.txt','a')
-        file.write('\n'+espanol+'\n'+ingles)
-        #file.write('\n'+'Nuevo Hola Mundo 2')
-        file.close
-        
-        ingles=reg_traductor.eng.data
-        radios=reg_traductor.radios.data
-        texto=reg_traductor.textoIngresado.data
-        print(espanol)
-    return render_template('traductor.html',form=reg_traductor,espanol=espanol,ingles=ingles,radios=radios,texto=texto)
+    reg_buscar = forms.BuscarForm(request.form)
+    btn1 = request.form.get("Guardar")
+    btn2 = request.form.get("Buscar")
+    if request.method=="POST" and 'Guardar' in request.form:
+        if reg_traductor.validate():
+            if btn1=='Guardar':
+                español=request.form['esp']
+                ingles=request.form['eng']
+                g=open('diccionario.txt','a')
+                g.write('Espanol: ' + español.lower() + '\n' + 'Ingles: ' + ingles.lower() + '\n')
+                
+                return render_template("traductor.html",form=reg_traductor,form2=reg_buscar)
+    if request.method=="POST" and 'Buscar' in request.form:
+        if reg_buscar.validate():
+            ingles=None
+            español=None
+            if btn2=='Buscar':
+                idioma=reg_buscar.radios.data
+                lenguaje=reg_buscar.textoIngresado.data.lower()
+                file=open('diccionario.txt','r')
+                lineas=file.readlines()
+                mensaje=''
+                for linea in lineas:
+                    ingles, español = linea.strip().lower().split(' ')
+                    
+                    if idioma=='español':
+                        if lenguaje==ingles:
+                            mensaje = f'La traduccion de "{ingles.upper()}" es "{español.upper()}".'
+                            break
+                    elif idioma=='ingles':
+                        if lenguaje==español:
+                            mensaje = f'La traduccion de "{español.upper}" es "{ingles.upper}".'
+                            break
+                if not mensaje:
+                    mensaje="No existe esta palabra"
+                    file.close()
+                return render_template("traductor.html",form=reg_traductor,form2=reg_buscar,mensaje=mensaje)
+    return render_template('traductor.html',form=reg_traductor,form2=reg_buscar)
 
 @app.route("/Alumnos",methods=['GET','POST'])
 def alumnos():

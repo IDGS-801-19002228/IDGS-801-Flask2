@@ -1,0 +1,6 @@
+Espanol: hola
+Ingles: hello
+Espanol: rojo
+Ingles: red
+Espanol: azul
+Ingles: blue

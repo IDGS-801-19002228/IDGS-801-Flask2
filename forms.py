@@ -34,16 +34,14 @@ class LoginForm(Form):
     ])
     
 class TraductorForm(Form):
-    esp=StringField('Español',[
-        validators.DataRequired(message='El campo es requerido'),
-        validators.length(min=4,max=10,message='long de campo 4 min and 5 max')
+    esp = StringField('Español',[
+        validators.DataRequired(message='El campo es requerido')
     ])
-    eng=StringField('Ingles',[
-        validators.DataRequired(message='El campo es requerido'),
-        validators.length(min=4,max=10,message='long de campo 4 min and 5 max')
+    eng = StringField('Ingles',[
+        validators.DataRequired(message='El campo es requerido')
     ])
-    radios = RadioField(choices=[('1', 'Español'), ('2', 'Ingles')],default='0')
+class BuscarForm(Form):
+    radios = RadioField('Idioma', choices=[('es', 'Español'), ('ing', 'Ingles')])
     textoIngresado = StringField('Ingresa la palabra a buscar',[
-        validators.DataRequired(message='El campo es requerido'),
-        validators.length(min=4,max=10,message='long de campo 4 min and 5 max')
+        validators.DataRequired(message='El campo es requerido')
     ])
